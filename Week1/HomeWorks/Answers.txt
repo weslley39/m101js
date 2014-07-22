@@ -1,0 +1,6 @@
+HW1-1
+    Hello from MongoDB!
+HW1-2
+    I like kittens
+HW1-3
+    Hello, Agent 007.

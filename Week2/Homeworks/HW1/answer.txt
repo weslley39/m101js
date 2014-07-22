@@ -1,0 +1,8 @@
+TO IMPORT
+    mongoimport -host $IP --db course --headerline --type csv --collection homeworks < weather_data.csv 
+
+TO DISCOVER THE ANSWER
+    db.homeworks.find({'Wind Direction' : {'$lt' : 360, '$gt' : 180} , 'Temperature' : {'$lt' : 5}}).pretty()
+    
+THE ANSWER
+    New Mexico
