@@ -1,0 +1,121 @@
+db.students.ensureIndex({class : 1, student_bla: 1})
+
+
+db.students.ensureIndex({student_id: 1, class_id: 1}, {unique: true})
+
+
+ www.nfp.fazenda.sp.gov.br/ws/arquivonf_mod1.asmx
+
+ 383
+
+
+
+
+db.stores.find({location : {$near: [50,50]}})
+
+db.places.find({location :{$near:{$geometry:{type: "Point", coordinates : [xxx, xxx]}, $maxDistance: 2000}}})
+
+db.sentences.find({$text: {$search: 'rat tree obsidian'}})
+
+db.profiles.find:({millis:{$gt: 1} }).sort({ts: 1})
+
+
+
+
+
+db.zips.aggregate({$group:{Id: { "Maker": "$manufacturer"}, sum_prices: {$sum: "$price"}}})
+
+db.zips.aggregate([{$group: {"_id": "$state", "population": {$sum: "$pop"}}}])
+
+db.products.aggregate([$group: {_id: {"category": "$category"}, avg_price: {$avg: "$price"}}])
+
+db.zips.aggregate([{$group: {_id: {"state": "$state"}, avg_pop: {$avg: "$pop"}}])
+
+db.zips.aggregate([{$project: {_id: 0, "city": {$toLower: "$city"}, loc: 0, "zip": "$_id"}}])
+
+db.zips.aggregate([$match: {_id: {$gt: 100000}}])
+
+db.zips.aggregate([{$sort: {state: 1, city: 1}}])
+
+db.zips.aggreagte([{$skip: 10}, {$limit: 10}])
+
+db.zips.aggregate([{}])
+
+
+HW1
+db.posts.aggregate(
+	[
+		{$group: {"_id": "$comments.author"}},
+		{$unwind: "$_id"},
+		{$group: {_id: "$_id", numberof: {$sum: 1}}},
+		{$sort: {numberof: 1}}
+	])
+
+------------------
+{
+	"_id" : "Gisela Levin",
+	"numberof" : 112
+}
+
+HW2
+
+db.zips.aggregate(
+	[
+		{$match: {state: {$in: ['CA', 'NY']}}},
+		{$group: {_id: {state: "$state", city: "$city"}, pop: {$sum: "$pop"}}},
+		{$match: {pop: {$gt: 25000}}},
+		{$group: {_id: null, pop: {$avg: "$pop"}}}
+	])
+
+-------------------
+{
+	"ok" : 1,
+	"result" : [
+		{
+			"_id" : null,
+			"pop" : 44804.782608695656
+		}
+	]
+}
+
+HW3
+db.grades.aggregate(
+	[
+		{$unwind: "$scores"},
+		{$match: {"scores.type": {$in: ['exam', 'homework']}}},
+		{$group: {_id: {student_id: "$student_id", class_id: "$class_id"}, average: {$avg: "$scores.score"}}},
+		{$group: {_id: {class_id: "$_id.class_id"}, class_avg: {$avg: "$average"}}},
+		{$sort: {class_avg: 1}}
+	])
+------------------
+{
+	"_id" : {
+		"class_id" : 1
+	},
+	"class_avg" : 64.50642324269175
+}
+
+HW4
+db.zips.aggregate([
+    {$project: 
+     {
+		first_char: {$substr : ["$city",0,1]},
+		pop: 1,
+		city: "$city",
+		zip: "$_id",
+		state: 1
+     }
+   },
+   {$match: {first_char: {$in: ['0','1','2','3','4','5','6','7','8','9']}}},
+   {$group: {_id: null, population: {$sum: "$pop"}}}
+])
+-------------------
+{
+	"result" : [
+		{
+			"_id" : null,
+			"population" : 298015
+		}
+	],
+	"ok" : 1
+}
